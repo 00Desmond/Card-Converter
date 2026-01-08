@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Format Converter</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; background: #f0f2f5; display: flex; justify-content: center; }
+    .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+    h2 { color: #1a73e8; margin-top: 0; }
+    label { font-weight: 600; display: block; margin-bottom: 8px; color: #444; }
+    input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #dfe1e5; border-radius: 8px; box-sizing: border-box; font-size: 18px; outline: none; }
+    input:focus { border-color: #1a73e8; }
+    .result-container { background: #f8f9fa; border: 1px solid #e8eaed; padding: 20px; border-radius: 8px; text-align: center; }
+    #outputCard { font-size: 32px; font-weight: bold; color: #1a73e8; margin: 10px 0; }
+    .copy-btn { background: #1a73e8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    .copy-btn:hover { background: #1557b0; }
+    .hint { font-size: 12px; color: #70757a; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Format Converter</h2>
+    
+    <label for="inputCard">Original Card Number</label>
+    <input type="number" id="inputCard" placeholder="Enter number (e.g. 7336)" oninput="convert()" autofocus>
+
+    <div class="result-container">
+        <label>Converted Format</label>
+        <div id="outputCard">0</div>
+        <button class="copy-btn" onclick="copyResult()">Copy Result</button>
+    </div>
+
+    <p class="hint">This replicates the 16-bit Bit Reversal formula.</p>
+</div>
+
+<script>
+function convert() {
+    const input = document.getElementById('inputCard').value;
+    const outputDisplay = document.getElementById('outputCard');
+    
+    if (!input) {
+        outputDisplay.innerText = "0";
+        return;
+    }
+
+    // 1. Convert to 16-bit binary
+    let binary = (parseInt(input) & 0xFFFF).toString(2).padStart(16, '0');
+    
+    // 2. Reverse bits (Excel formula logic)
+    let reversed = binary.split('').reverse().join('');
+    
+    // 3. Back to Decimal
+    let result = parseInt(reversed, 2);
+    
+    outputDisplay.innerText = result;
+}
+
+function copyResult() {
+    const text = document.getElementById('outputCard').innerText;
+    navigator.clipboard.writeText(text);
+    alert("Copied: " + text);
+}
+</script>
+
+</body>
+</html>
